@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arama Sonuçları</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-gray-100 to-gray-300 min-h-screen font-sans">
+
+    <!-- Ana Container -->
+    <div class="container mx-auto p-8">
+
+        <!-- Başlık -->
+        <h1 class="text-3xl font-extrabold text-center text-gray-800 mb-6">Arama Sonuçları: "{{ query }}"</h1>
+
+        <!-- Arama Sonuçları -->
+        {% if results %}
+            <ul class="space-y-4">
+                {% for product in results %}
+                    <li class="bg-white shadow-lg rounded-lg p-6 hover:bg-gray-50 transition duration-300">
+                        <div class="flex space-x-6">
+                            <!-- Ürün Resmi -->
+                            {% if product.image %}
+                                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-32 h-32 object-cover rounded-lg">
+                            {% else %}
+                                <img src="{% static 'images/default-product.jpg' %}" alt="Default Image" class="w-32 h-32 object-cover rounded-lg">
+                            {% endif %}
+                            
+                            <!-- Ürün Detayları -->
+                            <div class="flex-1">
+                                <a href="{% url 'product_detail' product.pk %}" class="text-xl font-semibold text-gray-800 hover:text-gray-600">
+                                    {{ product.name }}
+                                </a>
+                                <p class="text-gray-500 mt-2">Fiyat: ${{ product.price }}</p>
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-center text-gray-500 mt-4">Arama kriterlerinize uygun ürün bulunamadı.</p>
+        {% endif %}
+
+        <!-- Geri Dön Butonu -->
+        <div class="text-center mt-6">
+            <a href="{% url 'product_list' %}" class="text-blue-600 hover:text-blue-800 font-medium text-lg">
+                Ürün Listesine Geri Dön
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>
+

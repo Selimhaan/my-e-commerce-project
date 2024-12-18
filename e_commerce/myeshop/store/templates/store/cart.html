@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+{% load custom_filters %}
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-yellow-100 to-orange-200 font-sans">
+
+    <!-- Ana Container -->
+    <div class="container mx-auto p-8 min-h-screen flex flex-col">
+
+        <!-- Başlık -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-extrabold text-gray-800">Your Shopping Cart</h1>
+        </div>
+
+        <!-- Sepet Detayları -->
+        {% if cart_details %}
+            <div class="overflow-x-auto shadow-lg rounded-lg">
+                <table class="min-w-full bg-white table-auto border-collapse">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="py-2 px-4 text-left">Product</th>
+                            <th class="py-2 px-4 text-left">Quantity</th>
+                            <th class="py-2 px-4 text-left">Price</th>
+                            <th class="py-2 px-4 text-left">Subtotal</th>
+                            <th class="py-2 px-4 text-left">Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in cart_details %}
+                            <tr class="hover:bg-gray-50">
+                                <td class="py-3 px-4">{{ item.product.name }}</td>
+                                <td class="py-3 px-4">
+                                    <form action="{% url 'update_cart' pk=item.pk %}" method="POST" class="inline-block">
+                                        {% csrf_token %}
+                                        <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="border rounded-md p-2 w-20" />
+                                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200">Update</button>
+                                    </form>
+                                </td>
+                                <td class="py-3 px-4">${{ item.product.price }}</td>
+                                <td class="py-3 px-4">${{ item.product.price|multiply:item.quantity|floatformat:2 }}</td>
+                                <td class="py-3 px-4">
+                                    <form action="{% url 'remove_from_cart' pk=item.pk %}" method="POST" class="inline-block">
+                                        {% csrf_token %}
+                                        <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition duration-200">Remove</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <!-- Toplam Fiyat -->
+                <h2 class="mt-6 text-xl font-semibold text-gray-800">Total: ${{ total_price|floatformat:2 }}</h2>
+                <a href="{% url 'checkout' %}" class="mt-4 inline-block py-2 px-6 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 transition duration-300">
+                    Proceed to Checkout
+                </a>
+            </div>
+        {% else %}
+            <p class="text-center text-gray-700 text-lg">Your cart is empty.</p>
+        {% endif %}
+
+        <!-- Devam Et -->
+        <div class="text-center mt-8">
+            <a href="{% url 'product_list' %}" class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition duration-300">
+                Continue Shopping
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>

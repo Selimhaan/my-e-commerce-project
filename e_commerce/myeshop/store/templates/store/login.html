@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giriş Yap</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-gray-800 to-gray-900 min-h-screen flex items-center justify-center font-sans">
+    <!-- Ana Container -->
+    <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-sm">
+        <!-- Başlık -->
+        <h2 class="text-3xl font-extrabold text-center text-gray-800 mb-4">Giriş Yap</h2>
+        <p class="text-sm text-center text-gray-500 mb-6">Hesabınıza giriş yapın</p>
+
+        <!-- Form -->
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+
+            <!-- Form Genel Hataları -->
+            {% if form.non_field_errors %}
+                <div class="text-red-600 text-sm text-center mb-4">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- Kullanıcı Adı -->
+            <div>
+                <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                    Kullanıcı Adı
+                </label>
+                <input type="text" name="username" value="{{ form.username.value }}" id="{{ form.username.id_for_label }}" class="w-full mt-1 border border-gray-300 rounded-lg p-2">
+                {% if form.username.errors %}
+                    <ul class="text-xs text-red-600 mt-1">
+                        {% for error in form.username.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <!-- Şifre -->
+            <div>
+                <label for="{{ form.password.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                    Şifre
+                </label>
+                <input type="password" name="password" value="{{ form.password.value }}" id="{{ form.password.id_for_label }}" class="w-full mt-1 border border-gray-300 rounded-lg p-2">
+                {% if form.password.errors %}
+                    <ul class="text-xs text-red-600 mt-1">
+                        {% for error in form.password.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <!-- Giriş Yap Butonu -->
+            <div>
+                <button type="submit" class="bg-gray-800 text-white py-2 px-4 rounded-lg hover:bg-gray-900 transition font-semibold w-full">
+                    Giriş Yap
+                </button>
+            </div>
+        </form>
+
+        <!-- Kayıt Linki -->
+        <p class="text-center text-sm text-gray-600 mt-6">
+            Hesabınız yok mu?
+            <a href="{% url 'register' %}" class="text-blue-600 hover:text-blue-800 font-medium">Kaydol</a>
+        </p>
+    </div>
+</body>
+</html>
